@@ -29,8 +29,13 @@ topological_space.subtype.second_countable_topology _ _
 
 instance : orderable_topology ℝ≥0 :=
 ⟨ le_antisymm
+    (generate_from_le $ assume s hs,
+    match s, hs with
+    | _, ⟨⟨a, ha⟩, or.inl rfl⟩ := ⟨{b : ℝ | a < b}, is_open_lt' a, rfl⟩
+    | _, ⟨⟨a, ha⟩, or.inr rfl⟩ := ⟨{b : ℝ | b < a}, is_open_gt' a, set.ext $ assume b, iff.refl _⟩
+    end)
     begin
-      apply induced_le_iff_le_coinduced.2,
+      apply coinduced_le_iff_le_induced.1,
       rw [orderable_topology.topology_eq_generate_intervals ℝ],
       apply generate_from_le,
       assume s hs,
@@ -51,12 +56,7 @@ instance : orderable_topology ℝ≥0 :=
               show 0 ≤ a, from le_trans b.2 (le_of_lt hb)),
           rw [this],
           apply @is_open_empty } },
-    end
-    (generate_from_le $ assume s hs,
-    match s, hs with
-    | _, ⟨⟨a, ha⟩, or.inl rfl⟩ := ⟨{b : ℝ | a < b}, is_open_lt' a, rfl⟩
-    | _, ⟨⟨a, ha⟩, or.inr rfl⟩ := ⟨{b : ℝ | b < a}, is_open_gt' a, set.ext $ assume b, iff.refl _⟩
-    end) ⟩
+    end⟩
 
 section coe
 variable {α : Type*}
